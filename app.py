@@ -43,14 +43,14 @@ class MainWindow(QMainWindow):
     @Slot()
     def hello(self):
         """Slot appelé lorsque le bouton est cliqué"""
-        QMessageBox.information(self, "Message", "Hello! Le bouton a été cliqué!")
+        QMessageBox.information(self, "Message", "Hello")
         print("Hello from slot!")
 
 
     @Slot()
     def demo(self):
         """Slot appelé lorsque le bouton est cliqué"""
-        QMessageBox.information(self, "Message", "Hello! Le bouton a été cliqué!")
+        QMessageBox.information(self, "Message", "Hello")
         print("Hello from slot!")
 def main():
     app = QApplication(sys.argv)
