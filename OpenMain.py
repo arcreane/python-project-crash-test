@@ -23,7 +23,8 @@ class InterfaceController:
             self.window.AltSup.clicked.connect(self.Alt1)
             self.window.AltInf.clicked.connect(self.Alt2)
 
-            self.window.horizontalSliderSpeed.valueChanged.connect(self.slider_changeSpeed)
+            self.window.sliderspeed.valueChanged.connect(self.slider_changeSpeed)
+            self.window.slideralt.valueChanged.connect(self.slider_changeAlt)
 
         except AttributeError:
             pass
@@ -37,7 +38,10 @@ class InterfaceController:
 
     def slider_changeSpeed(self, valeur):
         self.vitesse = valeur
-        self.window.labelValue.setText(f"Vitesse : {self.vitesse}")
+        self.window.labelspeed.setText(f"Valeur : {valeur}")
+    def slider_changeAlt(self, valeur):
+        self.vitesse = valeur
+        self.window.labelalt.setText(f"Valeur : {valeur}")
 
     def show(self):
         self.window.show()
