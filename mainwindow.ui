@@ -6,14 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>857</width>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+      <layout class="QHBoxLayout" name="horizontalLayout">
    <widget class="QPushButton" name="sample_pushbutton">
     <property name="geometry">
      <rect>
@@ -27,6 +28,7 @@
      <string>PushButton</string>
     </property>
    </widget>
+      </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -46,20 +48,21 @@
    <sender>sample_pushbutton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>hello()</slot>
+   <slot>demo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>83</y>
+     <x>709</x>
+     <y>534</y>
     </hint>
     <hint type="destinationlabel">
-     <x>302</x>
-     <y>70</y>
+     <x>428</x>
+     <y>321</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>hello()</slot>
+  <signal>chang_speed(int)</signal>
+  <slot>demo()</slot>
  </slots>
 </ui>

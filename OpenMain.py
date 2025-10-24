@@ -1,14 +1,38 @@
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
+from PySide6 import QtCore, QtUiTools
+from PySide6.QtUiTools import loadUiType, QUiLoader
+from PySide6.QtCore import QFile, Slot
+from PySide6.QtWidgets import QMainWindow
 
-class InterfaceController:
+
+class InterfaceController(QMainWindow):
+    chang_speed = QtCore.Signal(int)
+
+
     def __init__(self, ui_path):
-        # Charge l'interface .ui
-        loader = QUiLoader()
-        ui_file = QFile(ui_path)
-        ui_file.open(QFile.ReadOnly)
-        self.window = loader.load(ui_file)
-        ui_file.close()
+
+        super().__init__()
+
+
+        loader = QtUiTools.QUiLoader()
+        loader.registerCustomWidget(InterfaceController)
+        try:
+            ui_class, _ = loadUiType(ui_path)
+            self.ui = ui_class()
+            self.ui.setupUi(self)
+
+            # loader = QUiLoader()
+            # ui_file = QFile(ui_file_path)
+            # ui_file.open(QFile.ReadOnly)
+            # self.window = loader.load(ui_file)
+            # ui_file.close()
+        except FileNotFoundError:
+            # Charge l'interface .ui
+            loader = QUiLoader()
+            ui_file = QFile(ui_path)
+            ui_file.open(QFile.ReadOnly)
+            self.window = loader.load(ui_file)
+            ui_file.close()
+
 
         self.vitesse = 0
 
@@ -43,5 +67,13 @@ class InterfaceController:
         self.vitesse = valeur
         self.window.labelalt.setText(f"Valeur : {valeur}")
 
-    def show(self):
-        self.window.show()
+    # def show(self):
+    #     self.window.show()
+
+    @Slot()
+    def demo(self):
+        self.chang_speed.emit(50)
+
+    @Slot()
+    def hello(self):
+        self.chang_speed.emit(50)
