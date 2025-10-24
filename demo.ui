@@ -6,57 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>219</height>
+    <width>777</width>
+    <height>609</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>60</y>
-      <width>79</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>10</y>
-      <width>71</width>
-      <height>71</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>92</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>RadioButton</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Allez HOP!!</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>416</width>
+     <width>777</width>
      <height>33</height>
     </rect>
    </property>
@@ -72,12 +52,28 @@
    <slot>demo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>196</x>
-     <y>80</y>
+     <x>45</x>
+     <y>414</y>
     </hint>
     <hint type="destinationlabel">
      <x>293</x>
      <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>demo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>578</x>
+     <y>119</y>
     </hint>
    </hints>
   </connection>
