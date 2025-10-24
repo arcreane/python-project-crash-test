@@ -52,6 +52,11 @@ class MainWindow(QMainWindow):
         """Slot appelé lorsque le bouton est cliqué"""
         QMessageBox.information(self, "Message", "Hello! Le bouton a été cliqué!")
         print("Hello from slot!")
+
+    @Slot()
+    def demo2(self):
+        print("Hello from solt 2G2")
+
 def main():
     app = QApplication(sys.argv)
     window = MainWindow()
