@@ -1,8 +1,7 @@
 import sys
 
 from PySide6 import QtUiTools
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton
-from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile, QIODevice, Slot
 
 
@@ -52,10 +51,6 @@ class MainWindow(QMainWindow):
         """Slot appelé lorsque le bouton est cliqué"""
         QMessageBox.information(self, "Message", "Hello")
         print("Hello from slot!")
-
-    @Slot()
-    def demo2(self):
-        print("Hello from solt 2G2")
 
 def main():
     app = QApplication(sys.argv)

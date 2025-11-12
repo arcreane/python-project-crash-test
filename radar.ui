@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>857</width>
+    <width>1020</width>
     <height>644</height>
    </rect>
   </property>
@@ -14,18 +14,30 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2">
     <item>
-     <widget class="QSlider" name="horizontalSlider">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
+     <widget class="QLabel" name="labelspeed">
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="sample_pushbutton">
-      <property name="text">
-       <string>PushButton</string>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="maximum">
+       <number>360</number>
+      </property>
+      <property name="value">
+       <number>180</number>
+      </property>
+      <property name="sliderPosition">
+       <number>180</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -36,7 +48,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>857</width>
+     <width>1020</width>
      <height>33</height>
     </rect>
    </property>
@@ -46,40 +58,40 @@
  <resources/>
  <connections>
   <connection>
-   <sender>sample_pushbutton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>demo()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>847</x>
-     <y>339</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>428</x>
-     <y>321</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>MainWindow</sender>
    <signal>chang_speed(int)</signal>
    <receiver>horizontalSlider</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>428</x>
-     <y>321</y>
+     <x>424</x>
+     <y>260</y>
     </hint>
     <hint type="destinationlabel">
-     <x>385</x>
-     <y>327</y>
+     <x>366</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>labelspeed</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>348</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>194</x>
+     <y>328</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <signal>chang_speed(int)</signal>
-  <slot>demo()</slot>
+  <slot>maxi()</slot>
  </slots>
 </ui>

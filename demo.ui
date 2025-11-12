@@ -25,7 +25,7 @@
     <item>
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Allez HOP!!</string>
+       <string>PushButton</string>
       </property>
      </widget>
     </item>
