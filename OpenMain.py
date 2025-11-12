@@ -11,7 +11,7 @@ class Simulation(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # Charger interface .ui
+        # Charge interface .ui
         loader = QUiLoader()
         self.ui = loader.load("radartest.ui", self)
         self.setCentralWidget(self.ui.centralwidget)
