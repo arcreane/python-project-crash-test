@@ -1,47 +1,83 @@
+import sys
+from Plane import *
+from Spawn import *
+from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QTimer, Qt
+from PySide6.QtGui import QPainter, QPixmap
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
 
-class InterfaceController:
-    def __init__(self, ui_path):
-        # Charge l'interface .ui
+
+class Simulation(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Charge interface .ui
         loader = QUiLoader()
-        ui_file = QFile(ui_path)
-        ui_file.open(QFile.ReadOnly)
-        self.window = loader.load(ui_file)
-        ui_file.close()
+        self.ui = loader.load("radartest.ui", self)
+        self.setCentralWidget(self.ui.centralwidget)
 
-        self.vitesse = 0
+        # Charger les images
+        self.background = QPixmap("image/runway.png")
+        self.plane_img = QPixmap("image/plane.png")
 
-        # Connecte les boutons ici
-        self.connect_signals()
+        # Gestion avion
+        self.plane = None
+        QTimer.singleShot(200, self.spawn_plane)  #évite de créer l'avion avant que l’interface soit prête
 
-    def connect_signals(self):
-        """
-        Connecte les signaux (clics de boutons) aux méthodes correspondantes.
-        """
-        try:
-            self.window.AltSup.clicked.connect(self.Alt1)
-            self.window.AltInf.clicked.connect(self.Alt2)
+        # délais entre chaque appelle de move()
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.move)
+        self.timer.start(16)
 
-            self.window.sliderspeed.valueChanged.connect(self.slider_changeSpeed)
-            self.window.slideralt.valueChanged.connect(self.slider_changeAlt)
+    def spawn_plane(self):
+        frame = self.ui.frameCenter
+        x, y, angle = spawn(frame, self.plane_img)
+        self.plane = Plane(x, y, angle, self.plane_img)
 
-        except AttributeError:
-            pass
+    def move(self):
+        if not self.plane:
+            return
 
-    # Fonctions appelées par les boutons
-    def Alt1(self):
-        pass
+        frame = self.ui.frameCenter
+        max_l = frame.width() - self.plane.w
+        max_h = frame.height() - self.plane.h
 
-    def Alt2(self):
-        pass
+        dans_la_zone = self.plane.update_position(max_l, max_h) #Recoit True or False
+        if not dans_la_zone:
+            self.plane = None
+            QTimer.singleShot(100, self.spawn_plane)
 
-    def slider_changeSpeed(self, valeur):
-        self.vitesse = valeur
-        self.window.labelspeed.setText(f"Valeur : {valeur}")
-    def slider_changeAlt(self, valeur):
-        self.vitesse = valeur
-        self.window.labelalt.setText(f"Valeur : {valeur}")
+        self.update()
 
-    def show(self):
-        self.window.show()
+    def paintEvent(self, event):
+        painter = QPainter(self)
+
+        #FOND GLOBAL
+        win_l, win_h = self.width(), self.height()
+        if not self.background.isNull():
+            bg = self.background.scaled(win_l, win_h, Qt.KeepAspectRatioByExpanding)
+            painter.drawPixmap(0, 0, bg)
+
+        #AVION
+        if self.plane:
+            frame = self.ui.frameCenter
+            fx, fy = frame.x(), frame.y()
+            painter.save()
+            # Déplace le repère de dessin au centre de l’avion (coord x,y dans le frame)
+            painter.translate(
+                fx + self.plane.x + self.plane.w / 2,
+                fy + self.plane.y + self.plane.h / 2
+            )
+            # Oriente le dessin selon l’angle actuel de l’avion
+            painter.rotate(self.plane.angle)
+
+            # Dessine l’image de l’avion centrée en (0,0) au point (x,y) sur le frame
+            painter.drawPixmap(-self.plane.w / 2, -self.plane.h / 2, self.plane.image)
+            painter.restore()
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Simulation()
+    window.showMaximized()
+    sys.exit(app.exec())
