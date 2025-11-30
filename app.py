@@ -15,7 +15,7 @@ class Simulation(QMainWindow):
         super().__init__()
 
         loader = QUiLoader()
-        self.ui = loader.load("radartest.ui", self)
+        self.ui = loader.load("radar.ui", self)
         self.setCentralWidget(self.ui.centralwidget)
 
         self.background = QPixmap("image/runway.png")
