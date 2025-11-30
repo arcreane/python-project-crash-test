@@ -3,6 +3,7 @@ from Plane import *
 from Spawn import *
 from move import move_all
 from ClicPlane import click_on_plane
+from Game import GameEngine
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QPainter, QPixmap
@@ -14,14 +15,18 @@ class Simulation(QMainWindow):
         super().__init__()
 
         loader = QUiLoader()
-        self.ui = loader.load("radar.ui", self)
+        self.ui = loader.load("radartest.ui", self)
         self.setCentralWidget(self.ui.centralwidget)
 
         self.background = QPixmap("image/runway.png")
         self.plane_img = QPixmap("image/plane.png")
 
         self.planes = []
-        self.selected_plane = None  # avion actuellement sélectionné
+        self.selected_plane = None
+        self.game_over = False
+
+        # Moteur de jeu
+        self.game = GameEngine(self)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.movement)
@@ -40,14 +45,14 @@ class Simulation(QMainWindow):
         self.planes.append(plane)
 
     def movement(self):
+        if self.game_over:
+            return
         move_all(self)
 
     def mousePressEvent(self, event):
         plane = click_on_plane(event, self)
         if plane:
             self.selected_plane = plane
-            # Si tu as un QLabel pour les infos, tu pourras l’utiliser ici
-            # ex : self.ui.labelinfo.setText("Avion sélectionné")
 
     def paintEvent(self, event):
         painter = QPainter(self)
