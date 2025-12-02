@@ -1,6 +1,8 @@
 import math
 
 class Plane:
+    _id_counter = 1  # compteur interne pour générer FLT1, FLT2…
+
     def __init__(self, x, y, angle_deg, image):
         self.x = float(x)
         self.y = float(y)
@@ -9,6 +11,9 @@ class Plane:
         self.image = image
         self.w = image.width()
         self.h = image.height()
+
+        self.name = f"FLT{Plane._id_counter}"
+        Plane._id_counter += 1
 
     def update_position(self, max_l, max_h):
         rad = math.radians(self.angle)
