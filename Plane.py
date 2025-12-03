@@ -1,6 +1,8 @@
 import math
 
 class Plane:
+    counter = 1
+
     def __init__(self, x, y, angle_deg, image):
         self.x = float(x)
         self.y = float(y)
@@ -9,6 +11,15 @@ class Plane:
         self.image = image
         self.w = image.width()
         self.h = image.height()
+
+        self.name = f"Vol n°{Plane.counter}"
+        Plane.counter += 1
+
+
+        self.must_land = False
+        self.emergency = False
+        self.destination = "Transit"
+
 
     def update_position(self, max_l, max_h):
         rad = math.radians(self.angle)
