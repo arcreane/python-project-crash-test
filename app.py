@@ -65,7 +65,7 @@ class Simulation(QMainWindow):
         if self.game_over:
             return
         move_all(self)
-        self.update_info_label()   # 🔥 Commit 8 : mise à jour automatique
+        self.update_info_label()
 
     # --------------------------------------------------------
     # CLIC SUR UN AVION
@@ -76,6 +76,14 @@ class Simulation(QMainWindow):
             self.selected_plane = plane
             self.change_name.emit(plane.name)   # slot -> update label
             self.update_info_label()
+
+    def send_to_hold(self):
+        if self.selected_plane:
+            self.selected_plane.holding = True
+
+    def stop_hold(self):
+        if self.selected_plane:
+            self.selected_plane.holding = False
 
     # --------------------------------------------------------
     # SLOTS

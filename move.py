@@ -2,7 +2,7 @@ import math
 
 def move_all(sim):
     """
-    Gère le déplacement de tous les avions + collisions
+    Gère le déplacement de tous les avions + collisions + holding
     """
     if not sim.planes:
         return
@@ -11,8 +11,13 @@ def move_all(sim):
     max_w = frame.width()
     max_h = frame.height()
 
+    TURN_RATE = 1.5
+
     for plane in list(sim.planes):
         in_bounds = plane.update_position(max_w - plane.w, max_h - plane.h)
+        if plane.holding:
+            plane.angle = (plane.angle + TURN_RATE) % 360
+
         if not in_bounds:
             # avion sorti de l'écran
             if hasattr(sim, "game"):
