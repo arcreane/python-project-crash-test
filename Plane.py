@@ -15,7 +15,7 @@ class Plane:
         self.name = f"Vol n°{Plane.counter}"
         Plane.counter += 1
 
-
+        self.holding = False
         self.must_land = False
         self.emergency = False
         self.destination = "Transit"

@@ -2,12 +2,11 @@ import random
 import math
 from Plane import Plane
 
-def spawn(frame, plane_img):
-    fw, fh = frame.width(), frame.height()
 
+def spawn_raw(frame, plane_img):
+    fw, fh = frame.width(), frame.height()
     margin = 60
     center_margin = min(fw, fh) * 0.4
-
     center_x = fw / 2
     center_y = fh / 2
 
@@ -27,31 +26,31 @@ def spawn(frame, plane_img):
             return x, y, angle
 
 
-def spawn_plane(frame, plane_img):
-    x, y, angle = spawn(frame, plane_img)
-    plane = Plane(x, y, angle, plane_img)
+class SpawnManager:
+    def __init__(self, sim):
+        self.sim = sim
 
-    r = random.random()
+    def spawn_plane(self):
+        x, y, angle = spawn_raw(self.sim.ui.frameCenter, self.sim.plane_img)
+        plane = Plane(x, y, angle, self.sim.plane_img)
 
-    if r < 0.10:
-        plane.emergency = True
-        plane.must_land = True
-        plane.destination = "Piste 21 (EMERGENCY)"
+        r = random.random()
+        if r < 0.10:
+            plane.emergency = True
+            plane.must_land = True
+            plane.destination = "Piste 21 (EMERGENCY)"
+        elif r < 0.30:
+            plane.must_land = True
+            plane.destination = "Piste 21"
+        else:
+            plane.must_land = False
+            plane.destination = random.choice([
+                "Paris",
+                "Lyon",
+                "Nice",
+                "Lille",
+                "Toulouse",
+                "Nantes",
+                "Bruxelles"])
 
-    elif r < 0.30:
-        plane.must_land = True
-        plane.destination = "Piste 21"
-
-    else:
-        plane.must_land = False
-        plane.destination = random.choice([
-            "Paris",
-            "Lyon",
-            "Nice",
-            "Lille",
-            "Toulouse",
-            "Nantes",
-            "Bruxelles"
-        ])
-
-    return plane
+        return plane
