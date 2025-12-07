@@ -1,13 +1,18 @@
 import sys
 from Plane import *
-from Spawn import *
-from move import move_all
-from ClicPlane import click_on_plane
+from move import MovementManager
 from Game import GameEngine
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import QTimer, Qt, Slot, Signal
 from PySide6.QtGui import QPainter, QPixmap
 from PySide6.QtUiTools import QUiLoader
+from Spawn import SpawnManager
+from ClicPlane import ClickManager
+
+
+
+
+
 
 
 class Simulation(QMainWindow):
@@ -31,6 +36,9 @@ class Simulation(QMainWindow):
         self.game_over = False
 
         self.game = GameEngine(self)
+        self.movement_manager = MovementManager(self)
+        self.spawn_manager = SpawnManager(self)
+        self.click_manager = ClickManager(self)
 
         # Timer déplacement
         self.timer = QTimer(self)
@@ -53,9 +61,7 @@ class Simulation(QMainWindow):
     # SPAWN
     # --------------------------------------------------------
     def spawn_plane(self):
-        frame = self.ui.frameCenter
-        x, y, angle = spawn(frame, self.plane_img)
-        plane = Plane(x, y, angle, self.plane_img)
+        plane = self.spawn_manager.spawn_plane()
         self.planes.append(plane)
 
     # --------------------------------------------------------
@@ -64,14 +70,14 @@ class Simulation(QMainWindow):
     def movement(self):
         if self.game_over:
             return
-        move_all(self)
+        self.movement_manager.move_all()
         self.update_info_label()
 
     # --------------------------------------------------------
     # CLIC SUR UN AVION
     # --------------------------------------------------------
     def mousePressEvent(self, event):
-        plane = click_on_plane(event, self)
+        plane = self.click_manager.click(event)
         if plane:
             self.selected_plane = plane
             self.change_name.emit(plane.name)   # slot -> update label
