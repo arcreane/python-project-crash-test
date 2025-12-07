@@ -20,20 +20,6 @@ class MovementManager:
             alive = self.move_plane(plane, max_w - plane.w, max_h - plane.h)
             if not alive:
                 self.sim.planes.remove(plane)
-    TURN_RATE = 1.5
-
-    for plane in list(sim.planes):
-        in_bounds = plane.update_position(max_w - plane.w, max_h - plane.h)
-        if plane.holding:
-            plane.angle = (plane.angle + TURN_RATE) % 360
-
-        if not in_bounds:
-            # avion sorti de l'écran
-            if hasattr(sim, "game"):
-                sim.game.add_managed_plane()
-            sim.planes.remove(plane)
-
-    check_collisions(sim)
 
         self.sim.update()
 
