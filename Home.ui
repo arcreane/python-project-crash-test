@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1608</width>
+    <height>724</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>30</number>
+      </property>
+      <property name="topMargin">
+       <number>650</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="radioButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>50</horstretch>
+          <verstretch>52</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>22</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string>Musique</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>200</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>300</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="Level1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 85, 127);
+  color: white;
+    border-width: 2px;
+    border-style: solid;
+	border-color: rgb(85, 170, 255);
+    border-radius: 6px;</string>
+        </property>
+        <property name="text">
+         <string>Niveau 1</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>1</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="Level2">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 85, 127);
+  color: white;
+    border-width: 2px;
+    border-style: solid;
+	border-color: rgb(85, 170, 255);
+    border-radius: 6px;</string>
+        </property>
+        <property name="text">
+         <string>Niveau 2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="Level3">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(0, 85, 127);
+  color: white;
+    border-width: 2px;
+    border-style: solid;
+	border-color: rgb(85, 170, 255);
+    border-radius: 6px;</string>
+        </property>
+        <property name="text">
+         <string>Niveau 3</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Level1</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Level1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1225</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1279</x>
+     <y>5</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Level2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Level2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1333</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1584</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Level3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Level3()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1287</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1589</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Musique()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>61</x>
+     <y>664</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>623</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>Level1()</slot>
+  <slot>Level2()</slot>
+  <slot>Level3()</slot>
+  <slot>Musique()</slot>
+ </slots>
+</ui>
