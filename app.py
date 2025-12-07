@@ -1,18 +1,15 @@
 import sys
-from Plane import *
-from move import MovementManager
-from Game import GameEngine
+from PySide6.QtUiTools import loadUiType
 from PySide6.QtWidgets import QApplication, QMainWindow
-from PySide6.QtCore import QTimer, Qt, Slot, Signal
-from PySide6.QtGui import QPainter, QPixmap
-from PySide6.QtUiTools import QUiLoader
+from PySide6.QtCore import QTimer, Qt, Slot, Signal,QUrl
+from PySide6.QtGui import QPainter, QPixmap, QTransform
+from PySide6.QtMultimedia import QSoundEffect
+
+
+from Game import GameEngine
 from Spawn import SpawnManager
-from ClicPlane import ClickManager
-
-
-
-
-
+from move import MovementManager
+from ClicPlane import ClicManager
 
 
 class Simulation(QMainWindow):
@@ -24,75 +21,189 @@ class Simulation(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        loader = QUiLoader()
-        self.ui = loader.load("radar.ui", self)
-        self.setCentralWidget(self.ui.centralwidget)
+        ui_class, _ = loadUiType("radar.ui")
+        self.ui = ui_class()
+        self.ui.setupUi(self)
 
+        # Images
         self.background = QPixmap("image/runway.png")
         self.plane_img = QPixmap("image/plane.png")
+        self.plane_emergency = QPixmap("image/plane_panne.png")
+        self.needle_img = QPixmap("image/test4.png")
+
+        self.ui.labelCompas.setAttribute(Qt.WA_TransparentForMouseEvents)
+        self.ui.labelPlane.setAttribute(Qt.WA_TransparentForMouseEvents)
+
+        self.update_compass(self.ui.dial.value())
+        self.ui.dial.valueChanged.connect(self.update_compass)
+
+        # Son d’urgence
+        self.emergency_sound = QSoundEffect()
+        self.emergency_sound.setSource(QUrl.fromLocalFile("audio/Mayday.wav"))
+        self.emergency_sound.setLoopCount(1)
+        self.emergency_sound.setVolume(0.4)
 
         self.planes = []
         self.selected_plane = None
         self.game_over = False
 
-        self.game = GameEngine(self)
-        self.movement_manager = MovementManager(self)
-        self.spawn_manager = SpawnManager(self)
-        self.click_manager = ClickManager(self)
 
-        # Timer déplacement
+        self.spawn_manager = SpawnManager(self)
+        self.movement_manager = MovementManager(self)
+        self.clic_manager = ClicManager(self)
+
+
+        self.game = GameEngine(self)
+        self.game.timer_label()
+
+        # Timers
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.movement)
         self.timer.start(16)
 
-        # Timer spawn avion
         self.spawn_timer = QTimer(self)
         self.spawn_timer.timeout.connect(self.spawn_plane)
-        self.spawn_timer.start(3000)
 
-        QTimer.singleShot(200, self.spawn_plane)
+        self.spawn_level = 3000  # valeur par défaut
 
 
         self.change_name.connect(self.name_plane)
         self.change_speed.connect(self.speed_plane)
         self.change_angle.connect(self.angle_plane)
 
+        # Musique
+        self.music = QSoundEffect()
+        self.music.setSource(QUrl.fromLocalFile("audio/music.wav"))
+        self.music.setLoopCount(-1)
+        self.music.setVolume(0.3)
+
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.spawn_timer.start(self.spawn_level)
+        self.music.play()
+
+
+    def hideEvent(self, event):
+        super().hideEvent(event)
+        self.music.stop()
+
     # --------------------------------------------------------
-    # SPAWN
+    #  COMPAS
+    # --------------------------------------------------------
+    def update_compass(self, angle):
+        rotated = self.needle_img.transformed(QTransform().rotate(angle))
+        self.ui.labelPlane.setPixmap(rotated)
+
+    # --------------------------------------------------------
+    #  SPAWN
     # --------------------------------------------------------
     def spawn_plane(self):
         plane = self.spawn_manager.spawn_plane()
-        self.planes.append(plane)
+        if plane:
+            self.planes.append(plane)
 
     # --------------------------------------------------------
-    # MOUVEMENT
+    #  MOUVEMENT
     # --------------------------------------------------------
     def movement(self):
-        if self.game_over:
-            return
         self.movement_manager.move_all()
-        self.update_info_label()
 
     # --------------------------------------------------------
-    # CLIC SUR UN AVION
+    #  AFFICHAGE
+    # --------------------------------------------------------
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        W, H = self.width(), self.height()
+        bg = self.background.scaled(W, H, Qt.KeepAspectRatioByExpanding)
+        painter.drawPixmap(0, 0, bg)
+
+        frame = self.ui.frameCenter
+        fx, fy = frame.x(), frame.y()
+
+        for plane in self.planes:
+            painter.save()
+            painter.translate(fx + plane.x + plane.w / 2,
+                              fy + plane.y + plane.h / 2)
+            painter.rotate(plane.angle - 90)
+            painter.drawPixmap(-plane.w / 2, -plane.h / 2, plane.image)
+            painter.restore()
+
+    # --------------------------------------------------------
+    #  CLIC SUR AVION
     # --------------------------------------------------------
     def mousePressEvent(self, event):
-        plane = self.click_manager.click(event)
+        plane = self.clic_manager.clic_on_plane(event)
         if plane:
             self.selected_plane = plane
-            self.change_name.emit(plane.name)   # slot -> update label
-            self.update_info_label()
-
-    def send_to_hold(self):
-        if self.selected_plane:
-            self.selected_plane.holding = True
-
-    def stop_hold(self):
-        if self.selected_plane:
-            self.selected_plane.holding = False
+            self.game.register_click(plane)
+            self.change_name.emit(plane.name)
 
     # --------------------------------------------------------
-    # SLOTS
+    #  INFOS AVION
+    # --------------------------------------------------------
+    def update_info_label(self):
+        if self.selected_plane:
+            p = self.selected_plane
+            speed_kt = p.speed * 100 + 60
+            text = (
+                f"   N° Vol : {p.name}\n\n\n\n"
+                f"   Destination : {p.destination}\n\n\n\n"
+                f"   Vitesse : {speed_kt:.0f} kt\n\n\n\n"
+                f"   Cap : {p.angle:.1f}°"
+            )
+            self.ui.labelinfo.setText(text)
+
+    # --------------------------------------------------------
+    #  HOLD
+    # --------------------------------------------------------
+    @Slot()
+    def send_hold(self):
+        if self.selected_plane:
+            self.movement_manager.send_plane_to_hold(self.selected_plane)
+
+    @Slot()
+    def stop_hold(self):
+        if self.selected_plane:
+            self.movement_manager.release_hold(self.selected_plane)
+
+    # --------------------------------------------------------
+    #  TOUR DE PISTE
+    # --------------------------------------------------------
+    @Slot()
+    def land_plane(self):
+        if self.game_over or not self.selected_plane:
+            return
+        if not self.selected_plane.must_land:
+            return
+
+        plane = self.selected_plane
+        frame = self.ui.frameCenter
+
+        cx = frame.width() / 2
+        cy = frame.height() / 2
+
+        relative_wps = [
+            (+120, +40),
+            (0, +300),
+            (-120, +260),
+            (-10, -150)
+        ]
+
+        piste_angle = 205
+
+        final_wps = []
+        for lx, ly in relative_wps:
+            rx, ry = MovementManager.rotate_point(lx, ly, piste_angle)
+            final_wps.append((cx + rx, cy + ry))
+
+        plane.waypoints = final_wps
+        plane.current_wp = 0
+        plane.landing = True
+        plane.speed = 1
+
+    # --------------------------------------------------------
+    #  SLIDERS/BOUTONS
     # --------------------------------------------------------
     @Slot(str)
     def name_plane(self, name):
@@ -112,56 +223,40 @@ class Simulation(QMainWindow):
 
     @Slot(int)
     def emit_angle_change(self, value):
-        if self.selected_plane:
+        if not self.game_over and self.selected_plane:
             self.change_angle.emit(float(value))
 
     @Slot(int)
     def emit_speed_change(self, value):
-        if self.selected_plane:
+        if not self.game_over and self.selected_plane:
             self.change_speed.emit(value / 10.0)
 
 
-    def update_info_label(self):
+    @Slot()
+    def restart_game(self):
+        self.game_over = False
+        self.planes.clear()
+        self.selected_plane = None
 
-        if self.selected_plane is None:
-            self.ui.labelinfo.setText("")
-            return
+        # reset moteur de jeu
+        self.game.score = 0
+        self.game.managed_planes = 0
+        self.game.update_score_label()
 
-        p = self.selected_plane
+        # reset timer survie
+        self.game.survival_time = 0
+        self.game.timer_label()
 
-        # vitesse en kt
-        speed_kt = p.speed * 100 + 60
+        # relance les timers
+        self.game.survival_timer.start(1000)
+        self.game.score_timer.start(10000)
 
-        text = (
-            f"✈ Vol : {p.name}\n\n"
-            f"📍 Position : ({p.x:.0f}, {p.y:.0f})\n\n"
-            f"⚡ Vitesse : {speed_kt:.0f} kt\n\n"
-            f"🧭 Cap : {p.angle:.1f}°"
-        )
+        # relance spawn
+        self.timer.start(16)
+        self.spawn_timer.start(self.spawn_level)
 
-        self.ui.labelinfo.setText(text)
-
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        win_l, win_h = self.width(), self.height()
-
-        if not self.background.isNull():
-            bg = self.background.scaled(win_l, win_h, Qt.KeepAspectRatioByExpanding)
-            painter.drawPixmap(0, 0, bg)
-
-        frame = self.ui.frameCenter
-        fx, fy = frame.x(), frame.y()
-
-        for plane in self.planes:
-            painter.save()
-            painter.translate(
-                fx + plane.x + plane.w/2,
-                fy + plane.y + plane.h/2
-            )
-            painter.rotate(plane.angle)
-            painter.drawPixmap(-plane.w/2, -plane.h/2, plane.image)
-            painter.restore()
+        self.ui.labelinfo.setText("Cliquez sur un avion pour le contrôler")
+        self.update()
 
 
 if __name__ == "__main__":

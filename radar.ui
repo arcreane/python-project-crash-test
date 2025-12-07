@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1363</width>
-    <height>666</height>
+    <width>1608</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -38,7 +38,101 @@
       <property name="styleSheet">
        <string notr="true">background-color: transparent</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2"/>
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,2,3,10,0">
+       <item>
+        <widget class="QLabel" name="labelSTATS">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 85, 127);
+  color: white;
+border-radius: 5px</string>
+         </property>
+         <property name="text">
+          <string>STATS DE L'AVION</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTimer">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0,0,0,0);
+color: rgb(85, 170, 255);              /* texte vert radar */
+font-weight: bold;                    /* gras */
+font-size: 16px;                      /* taille */
+</string>
+         </property>
+         <property name="text">
+          <string>TIMER</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelScore">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0,0,0,0);
+color: rgb(85, 170, 255);              /* texte vert radar */
+font-weight: bold;                    /* gras */
+font-size: 16px;                      /* taille */
+</string>
+         </property>
+         <property name="text">
+          <string>SCORE</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelinfo">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LayoutDirection::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(0,0,0,0);
+color: rgb(85, 170, 255);              /* texte vert radar */
+font-weight: bold;                    /* gras */
+font-size: 12px;                      /* taille */
+</string>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;Cliquez sur un avion pour le contrôler&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnRestart">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 85, 127);
+  color: white;
+</string>
+         </property>
+         <property name="text">
+          <string>RESTART</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item>
@@ -46,15 +140,16 @@
       <property name="styleSheet">
        <string>background-color: rgba(0,0,0,0);</string>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3"/>
      </widget>
     </item>
     <item>
      <widget class="QFrame" name="frameRight">
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>0</height>
-       </size>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -63,6 +158,9 @@
        <property name="spacing">
         <number>0</number>
        </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+       </property>
        <property name="leftMargin">
         <number>10</number>
        </property>
@@ -70,25 +168,123 @@
         <number>9</number>
        </property>
        <property name="bottomMargin">
-        <number>50</number>
+        <number>9</number>
        </property>
        <item>
-        <widget class="QDial" name="dialAngle">
+        <widget class="QFrame" name="frame">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>300</width>
-           <height>125</height>
+           <width>350</width>
+           <height>350</height>
           </size>
          </property>
-         <property name="maximum">
-          <number>360</number>
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
          </property>
-         <property name="singleStep">
-          <number>10</number>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
-         <property name="value">
-          <number>10</number>
-         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0" rowspan="2" colspan="2">
+           <widget class="QLabel" name="labelCompas">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap>image/COMPAS.png</pixmap>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="labelPlane">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTipDuration">
+             <number>0</number>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap>image/test4.png</pixmap>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+         <widget class="QDial" name="dial">
+          <property name="geometry">
+           <rect>
+            <x>5</x>
+            <y>5</y>
+            <width>340</width>
+            <height>340</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+         </widget>
         </widget>
        </item>
        <item>
@@ -167,8 +363,8 @@ border-radius: 5px;                     </string>
    <slot>emit_speed_change(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1178</x>
-     <y>287</y>
+     <x>1536</x>
+     <y>502</y>
     </hint>
     <hint type="destinationlabel">
      <x>950</x>
@@ -177,33 +373,17 @@ border-radius: 5px;                     </string>
    </hints>
   </connection>
   <connection>
-   <sender>dialAngle</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>emit_angle_change(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1178</x>
-     <y>160</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>952</x>
-     <y>639</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>pushButtonLand</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>land_selected_plane()</slot>
+   <slot>land_plane()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1178</x>
-     <y>364</y>
+     <x>1586</x>
+     <y>574</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1202</x>
+     <x>1199</x>
      <y>475</y>
     </hint>
    </hints>
@@ -212,11 +392,11 @@ border-radius: 5px;                     </string>
    <sender>pushButtonHold</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>send_to_hold()</slot>
+   <slot>send_hold()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1096</x>
-     <y>431</y>
+     <x>1586</x>
+     <y>646</y>
     </hint>
     <hint type="destinationlabel">
      <x>1194</x>
@@ -231,12 +411,44 @@ border-radius: 5px;                     </string>
    <slot>stop_hold()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1064</x>
-     <y>511</y>
+     <x>1586</x>
+     <y>718</y>
     </hint>
     <hint type="destinationlabel">
      <x>1191</x>
      <y>509</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dial</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>emit_angle_change(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1398</x>
+     <y>175</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1193</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRestart</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>restart_game()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>764</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>793</y>
     </hint>
    </hints>
   </connection>
@@ -246,8 +458,9 @@ border-radius: 5px;                     </string>
   <slot>emit_angle_change(int)</slot>
   <slot>name_plane()</slot>
   <slot>angle_plane()</slot>
-  <slot>land_selected_plane()</slot>
-  <slot>send_to_hold()</slot>
+  <slot>land_plane()</slot>
+  <slot>send_hold()</slot>
   <slot>stop_hold()</slot>
+  <slot>restart_game()</slot>
  </slots>
 </ui>
