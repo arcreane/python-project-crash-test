@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1608</width>
-    <height>808</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -154,7 +154,7 @@ font-size: 12px;                      /* taille */
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -318,7 +318,20 @@ font-size: 16px;
 border-radius: 5px;</string>
          </property>
          <property name="text">
-          <string>Attérisage</string>
+          <string>Attérisage 21</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 220, 0);
+font-weight: bold;                    
+font-size: 16px;                      
+border-radius: 5px;</string>
+         </property>
+         <property name="text">
+          <string>Attérisage 30</string>
          </property>
         </widget>
        </item>
@@ -364,7 +377,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1536</x>
-     <y>502</y>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>950</x>
@@ -380,7 +393,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1586</x>
-     <y>574</y>
+     <y>547</y>
     </hint>
     <hint type="destinationlabel">
      <x>1199</x>
@@ -396,7 +409,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1586</x>
-     <y>646</y>
+     <y>673</y>
     </hint>
     <hint type="destinationlabel">
      <x>1194</x>
@@ -443,12 +456,28 @@ border-radius: 5px;                     </string>
    <slot>restart_game()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>289</x>
-     <y>786</y>
+     <x>268</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel">
      <x>313</x>
      <y>793</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>land_plane30()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1264</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1221</x>
+     <y>603</y>
     </hint>
    </hints>
   </connection>
@@ -462,5 +491,6 @@ border-radius: 5px;                     </string>
   <slot>send_hold()</slot>
   <slot>stop_hold()</slot>
   <slot>restart_game()</slot>
+  <slot>land_plane30()</slot>
  </slots>
 </ui>

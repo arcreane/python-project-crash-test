@@ -54,9 +54,10 @@ class Home(QMainWindow):
 
     @Slot()
     def Level1(self):
-        level = 7000
+        level = 5000
         self.clic.play()
         time.sleep(2)
+        self.sim_window = Simulation(level=1)
         self.sim_window.spawn_level = level
         self.sim_window.spawn_timer.start(level)
 
@@ -68,6 +69,7 @@ class Home(QMainWindow):
         level = 5000
         self.clic.play()
         time.sleep(2)
+        self.sim_window = Simulation(level=2)
         self.sim_window.spawn_level = level
         self.sim_window.spawn_timer.start(level)
 
@@ -79,6 +81,7 @@ class Home(QMainWindow):
         level = 3000
         self.clic.play()
         time.sleep(2)
+        self.sim_window = Simulation(level=2)
         self.sim_window.spawn_level = level
         self.sim_window.spawn_timer.start(level)
 

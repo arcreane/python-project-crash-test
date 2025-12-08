@@ -18,19 +18,31 @@ class Simulation(QMainWindow):
     change_speed = Signal(float)
     change_angle = Signal(float)
 
-    def __init__(self):
+    def __init__(self,level=2):
         super().__init__()
+        self.level = level
 
-        ui_class, _ = loadUiType("radar.ui")
+        # --------------- UI SELON LE NIVEAU ----------------
+        if self.level == 1:
+            ui_file = "radar.ui"
+            self.background = QPixmap("image/runway.png")
+        elif self.level == 2:
+            ui_file = "radar2.ui"
+            self.background = QPixmap("image/runway2.png")
+        else:
+            ui_file = "radar.ui"
+            self.background = QPixmap("image/runway.png")
+
+        ui_class, _ = loadUiType(ui_file)
         self.ui = ui_class()
         self.ui.setupUi(self)
 
         # Images
-        self.background = QPixmap("image/runway.png")
         self.plane_img = QPixmap("image/plane.png")
         self.plane_emergency = QPixmap("image/plane_panne.png")
         self.needle_img = QPixmap("image/test4.png")
 
+        # QLabel ne bloque pas la souris
         self.ui.labelCompas.setAttribute(Qt.WA_TransparentForMouseEvents)
         self.ui.labelPlane.setAttribute(Qt.WA_TransparentForMouseEvents)
 
@@ -43,6 +55,7 @@ class Simulation(QMainWindow):
         self.emergency_sound.setLoopCount(1)
         self.emergency_sound.setVolume(0.4)
 
+        # État
         self.planes = []
         self.selected_plane = None
         self.game_over = False
@@ -171,7 +184,7 @@ class Simulation(QMainWindow):
     #  TOUR DE PISTE
     # --------------------------------------------------------
     @Slot()
-    def land_plane(self):
+    def land_plane21(self):
         if self.game_over or not self.selected_plane:
             return
         if not self.selected_plane.must_land:
@@ -187,7 +200,7 @@ class Simulation(QMainWindow):
             (+120, +40),
             (0, +300),
             (-120, +260),
-            (-10, -150)
+            (-10, -125)
         ]
 
         piste_angle = 205
@@ -196,6 +209,34 @@ class Simulation(QMainWindow):
         for lx, ly in relative_wps:
             rx, ry = MovementManager.rotate_point(lx, ly, piste_angle)
             final_wps.append((cx + rx, cy + ry))
+
+        plane.waypoints = final_wps
+        plane.current_wp = 0
+        plane.landing = True
+        plane.speed = 1
+
+    @Slot()
+    def land_plane30(self):
+        if self.game_over or not self.selected_plane:
+            return
+        if not self.selected_plane.must_land:
+            return
+
+        plane = self.selected_plane
+        frame = self.ui.frameCenter
+
+        cx = frame.width() / 2
+        cy = frame.height() / 2
+
+        wps_piste30 = [
+            (-300, 0),
+            (-300, 400),
+            (120, 400),
+            (120, 300),
+            (-200, 85),
+        ]
+
+        final_wps = [(cx + dx, cy + dy) for (dx, dy) in wps_piste30]
 
         plane.waypoints = final_wps
         plane.current_wp = 0
