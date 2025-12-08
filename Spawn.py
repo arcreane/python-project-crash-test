@@ -1,7 +1,7 @@
 import random
 import math
 from Plane import Airplane
-
+ALT_LEVELS = [3000, 5000, 7000, 10000]
 
 def spawn(frame, plane_img):
     """
@@ -39,8 +39,8 @@ class SpawnManager:
           - position aléatoire
           - angle tourné vers le centre
           - type de vol :
-              * 10% : urgence → Piste 21 (EMERGENCY)
-              * 30% : arrivée normale → Piste 21
+              * 10% : urgence → EMERGENCY
+              * 30% : arrivée normale → Atterisage
               * 60% : transit / autre destination
         Retourne l'objet Airplane (ou None si game_over).
         """
@@ -76,18 +76,24 @@ class SpawnManager:
         if r < 0.10:
             plane.emergency = True
             plane.must_land = True
-            plane.destination = "Piste 21 (EMERGENCY)"
+            plane.destination = "EMERGENCY"
+            plane.altitude = 7000
+            plane.target_altitude = 3000
             self.sim.emergency_sound.play()
             plane.image = self.sim.plane_emergency
 
         elif r < 0.30:
             plane.emergency = False
             plane.must_land = True
-            plane.destination = "Piste 21"
+            plane.altitude = 5000
+            plane.target_altitude = 3000
+            plane.destination = "Atterisage"
 
         else:
             plane.emergency = False
             plane.must_land = False
+            plane.altitude = float(random.choice(ALT_LEVELS[1:]))
+            plane.target_altitude = plane.altitude
             plane.destination = random.choice([
                 "Lille", "Lyon", "Nice", "Nantes", "Londres",
                 "Toulouse", "Bruxelles", "Marseille", "Amsterdam",

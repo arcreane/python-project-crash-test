@@ -2,32 +2,22 @@ import math
 
 
 class MovementManager:
-    """
-    Gère tous les mouvements, holds, collisions, sorties d'écran, etc.
-    """
     def __init__(self, sim):
         self.sim = sim
 
     @staticmethod
     def rotate_point(px, py, angle_deg):
-        """Rotation d'un point autour de (0,0)."""
         a = math.radians(angle_deg)
         rx = px * math.cos(a) - py * math.sin(a)
         ry = px * math.sin(a) + py * math.cos(a)
         return rx, ry
 
-
     def hold(self, plane):
-        """
-        L'avion tourne continuellement (rate turn), mais garde sa vitesse
-        => trajectoire arrondie naturelle.
-        """
-        TURN_RATE = 1.3  # degrés par tick (0.8 = large virage / 3 = serré)
+        TURN_RATE = 1.3
         plane.angle = (plane.angle + TURN_RATE) % 360
 
-
+    # -------- COLLISIONS --------
     def check_collisions(self):
-        """Stoppe le jeu si deux avions se percutent."""
         if self.sim.game_over:
             return
 
@@ -35,7 +25,8 @@ class MovementManager:
         if n < 2:
             return
 
-        collision_radius = 30  # zone de collision
+        collision_radius = 30
+        vertical_separation_min = 900
 
         for i in range(n):
             for j in range(i + 1, n):
@@ -49,30 +40,20 @@ class MovementManager:
 
                 dx = cx2 - cx1
                 dy = cy2 - cy1
-                dist = math.sqrt(dx * dx + dy * dy)
+                dist = math.sqrt(dx*dx + dy*dy)
 
-                if dist <= collision_radius:
+                vertical_separation = abs(p1.altitude - p2.altitude)
+
+                if dist < collision_radius and vertical_separation < vertical_separation_min:
                     self.sim.game_over = True
                     self.sim.timer.stop()
                     self.sim.spawn_timer.stop()
-                    self.sim.ui.labelinfo.setText("⚠ COLLISION ! Jeu arrêté")
+                    self.sim.ui.labelinfo.setText(f"⚠ COLLISION !")
                     self.sim.game.stop_all()
                     return
 
-
-    def send_plane_to_hold(self, plane):
-        """Met un avion en hold"""
-        plane.holding = True
-
-    def release_hold(self, plane):
-        """Sort l'avion du HOLD"""
-        plane.holding = False
-
-    # ==========================================================
-    #   MOUVEMENT GLOBAL
-    # ==========================================================
+    # -------- MOUVEMENT GLOBAL --------
     def move_all(self):
-        """Gestion du déplacement de tous les avions."""
         if self.sim.game_over:
             return
         if not self.sim.planes:
@@ -82,51 +63,40 @@ class MovementManager:
         max_w = frame.width()
         max_h = frame.height()
 
-        # Mise à jour de chaque avion
         for plane in list(self.sim.planes):
 
-            # ----------- HOLD (virage continu) -------------
+            # Altitude
+            plane.update_altitude()
+
+            # HOLD
             if plane.holding:
                 self.hold(plane)
                 in_bounds = plane.update_position(max_w - plane.w, max_h - plane.h)
-
                 if not in_bounds:
-                    if plane.must_land:
-                        self.sim.game.score -= 5
-                        self.sim.game.update_score_label()
-                    else:
-                        self.sim.game.add_managed_plane(plane)
-
                     self.sim.planes.remove(plane)
-                    if plane == self.sim.selected_plane:
-                        self.sim.selected_plane = None
                 continue
 
-            # ----------- ATTERRISSAGE-------------
+            # ATTERRISSAGE
             if plane.landing:
                 if plane.reached_waypoint() and plane.current_wp == len(plane.waypoints) - 1:
                     self.sim.game.add_landing_score(plane)
                     self.sim.game.add_managed_plane(plane)
                     self.sim.planes.remove(plane)
-                    if plane == self.sim.selected_plane:
-                        self.sim.selected_plane = None
                     continue
 
                 plane.update_landing_angle()
                 if plane.reached_waypoint():
+                    if plane.current_wp == len(plane.waypoints) - 3:
+                        plane.target_altitude = 1000
+                    if plane.current_wp == len(plane.waypoints) - 2:
+                        plane.target_altitude = 0
                     plane.current_wp += 1
 
-            # ----------- VOL NORMAL -------------
+            # MOUVEMENT NORMAL
             in_bounds = plane.update_position(max_w - plane.w, max_h - plane.h)
             if not in_bounds:
-                if plane.must_land:
-                    self.sim.game.score -= 5
-                    self.sim.game.update_score_label()
-                else:
-                    self.sim.game.add_managed_plane(plane)
                 self.sim.planes.remove(plane)
-                if plane == self.sim.selected_plane:
-                    self.sim.selected_plane = None
+                continue
 
         self.check_collisions()
         self.sim.update()

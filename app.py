@@ -11,6 +11,7 @@ from Spawn import SpawnManager
 from move import MovementManager
 from ClicPlane import ClicManager
 
+ALT_LEVELS = [3000, 5000, 7000, 10000]
 
 class Simulation(QMainWindow):
 
@@ -135,12 +136,27 @@ class Simulation(QMainWindow):
         fx, fy = frame.x(), frame.y()
 
         for plane in self.planes:
+            # centre de l’avion (avant rotation)
+            px = fx + plane.x + plane.w / 2
+            py = fy + plane.y + plane.h / 2
+
             painter.save()
-            painter.translate(fx + plane.x + plane.w / 2,
-                              fy + plane.y + plane.h / 2)
+
+            # placer l’origine sur l’avion
+            painter.translate(px, py)
             painter.rotate(plane.angle - 90)
+
+            # dessiner l’avion
             painter.drawPixmap(-plane.w / 2, -plane.h / 2, plane.image)
-            painter.restore()
+
+            # dessiner l'altitude (dans le repère global, donc avant rotation)
+            painter.restore()  # ← revenir au repère global
+
+            painter.setPen(Qt.white)
+            painter.drawText(px - plane.w / 2,
+                             py - plane.h / 2 - 5,
+                             f"{plane.altitude:.0f} ft  \n"
+                             f"{plane.destination}\n")
 
     # --------------------------------------------------------
     #  CLIC SUR AVION
@@ -272,6 +288,12 @@ class Simulation(QMainWindow):
         if not self.game_over and self.selected_plane:
             self.change_speed.emit(value / 10.0)
 
+    @Slot(int)
+    def change_altitude_level(self, index):
+        if not self.selected_plane or self.game_over:
+            return
+        self.selected_plane.target_altitude = ALT_LEVELS[index]
+        self.update_info_label()
 
     @Slot()
     def restart_game(self):

@@ -154,7 +154,7 @@ font-size: 12px;                      /* taille */
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -310,6 +310,25 @@ font-size: 12px;                      /* taille */
         </widget>
        </item>
        <item>
+        <widget class="QSlider" name="horizontalSliderAlt">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButtonLand">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(0, 220, 0);
@@ -377,7 +396,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1536</x>
-     <y>484</y>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>950</x>
@@ -393,7 +412,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1586</x>
-     <y>547</y>
+     <y>579</y>
     </hint>
     <hint type="destinationlabel">
      <x>1199</x>
@@ -425,7 +444,7 @@ border-radius: 5px;                     </string>
    <hints>
     <hint type="sourcelabel">
      <x>1586</x>
-     <y>718</y>
+     <y>744</y>
     </hint>
     <hint type="destinationlabel">
      <x>1191</x>
@@ -472,12 +491,28 @@ border-radius: 5px;                     </string>
    <slot>land_plane30()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1264</x>
-     <y>597</y>
+     <x>1586</x>
+     <y>634</y>
     </hint>
     <hint type="destinationlabel">
      <x>1221</x>
      <y>603</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSliderAlt</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>change_altitude_level()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1275</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1222</x>
+     <y>516</y>
     </hint>
    </hints>
   </connection>
@@ -492,5 +527,6 @@ border-radius: 5px;                     </string>
   <slot>stop_hold()</slot>
   <slot>restart_game()</slot>
   <slot>land_plane30()</slot>
+  <slot>change_altitude_level()</slot>
  </slots>
 </ui>
